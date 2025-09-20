@@ -1,100 +1,227 @@
+'''
+
+# DicoEvent
+
+RESTful API untuk manajemen **event, ticket, registration, dan payment** menggunakan Django REST Framework + PostgreSQL.
+Proyek ini dibuat untuk memenuhi submission dengan target nilai **Advanced (4 pts)**.
+
+---
+
 # Starter
-- pipenv shell
-- pipenv install django==4.2
-- django-admin startproject DicoEvent .
-- buat database bernama dico_event menggunakan PostgreSQL
-    ```
-    psql -U postgres
-    CREATE DATABASE dico_event;
-    GRANT ALL PRIVILEGES ON DATABASE "dico_event" TO developer;
-    ALTER DATABASE "dico_event" OWNER TO developer;
-    ```
-- 
+
+1. Aktifkan virtual environment:
+
+   ```bash
+   pipenv shell
+   ```
+
+2. Install dependency:
+
+   ```bash
+   pipenv install django==4.2 djangorestframework psycopg2-binary python-decouple djangorestframework-simplejwt django-filter
+   ```
+
+3. Buat project Django:
+
+   ```bash
+   django-admin startproject DicoEvent .
+   ```
+
+4. Buat database PostgreSQL:
+
+   ```sql
+   psql -U postgres
+   CREATE DATABASE dico_event;
+   GRANT ALL PRIVILEGES ON DATABASE "dico_event" TO developer;
+   ALTER DATABASE "dico_event" OWNER TO developer;
+   ```
+
+5. Buat file `.env` di root project:
+
+   ```env
+   DATABASE_NAME=dico_event
+   DATABASE_USER=developer
+   DATABASE_PASSWORD=your_password
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   SECRET_KEY=django-insecure-ganti-dengan-yang-aman
+   DEBUG=True
+   ```
+
+6. Migrasi awal:
+
+   ```bash
+   python manage.py migrate
+   ```
+
+---
 
 # Ketentuan Project
+
 ## Pengantar
 
-Setiap kriteria dapat bernilai **0 sampai 4 points (pts)**.  
-Untuk lulus dari submission ini, setidaknya Anda harus mendapatkan **2 points dari setiap kriteria**.  
-Submission akan ditolak jika masih terdapat kriteria dengan nilai **0 points**.
+Setiap kriteria dapat bernilai **0 sampai 4 points (pts)**.
+Untuk lulus, minimal **2 points per kriteria**. Submission ditolak jika ada kriteria dengan **0 points**.
 
 ---
 
 ## Kriteria 1: Menggunakan Database untuk Menyimpan Data
 
-RESTful API yang Anda bangun haruslah menyimpan data di **database PostgreSQL**.
-
 ### Reject (0 pts)
-- Data tidak disimpan di database apa pun, menunjukkan tidak ada implementasi database.
-- Tidak ada konfigurasi database dalam proyek, atau konfigurasi yang ada tidak lengkap dan tidak berfungsi dengan baik.
-- Menggunakan database selain PostgreSQL.
-- Terdapat error dalam pengujian mandatory Postman.
+
+* Data tidak disimpan di database apa pun.
+* Tidak ada konfigurasi database atau konfigurasi yang salah.
+* Menggunakan database selain PostgreSQL.
+* Terdapat error dalam pengujian mandatory Postman.
 
 ### Basic (2 pts)
-- Data berhasil disimpan di PostgreSQL.
-- Menggunakan Django ORM pada tingkat dasar, terbatas pada operasi CRUD sederhana tanpa memanfaatkan fitur ORM lanjutan seperti limit, ordering, dan filter.
-- Pengujian mandatory Postman tidak ada yang error.
+
+* Data berhasil disimpan di PostgreSQL.
+* Menggunakan Django ORM dasar (CRUD).
+* Semua pengujian mandatory Postman tidak error.
 
 ### Skilled (3 pts)
-- Memenuhi ketentuan nilai sebelumnya.
-- Normalisasi database telah dilakukan dengan baik dengan setidaknya terdapat beberapa relasi antar tabel.
-- Merancang ERD (Entity Relationship Diagram) dan melampirkannya dalam proyek dalam bentuk image jpg/png dengan format nama berkas: **ERD-DicoEvent-versi-1**.
-- Menambahkan satu *unique constraint* di salah satu atribut di sebuah tabel. Misalnya, untuk atribut **email** di tabel **users**.
+
+* Memenuhi ketentuan sebelumnya.
+* Database dinormalisasi, ada relasi antar tabel.
+* Terdapat ERD dengan nama `ERD-DicoEvent-versi-1.png`.
+* Ada unique constraint, misalnya pada field **email** di tabel users.
 
 ### Advanced (4 pts)
-- Memenuhi ketentuan nilai sebelumnya.
-- Kredensial database disimpan di **environment variables** untuk memastikan keamanan data.
-- Environment variables harus menggunakan nama berikut:
-  - `DATABASE_NAME`
-  - `DATABASE_USER`
-  - `DATABASE_PASSWORD`
-  - `DATABASE_HOST`
-  - `DATABASE_PORT`
-- Menggunakan Django ORM yang lebih lanjut, dengan implementasi beberapa query lanjutan seperti limit, ordering, dan filter.
-- Menggunakan `uuid` sebagai id di tabel.
-- Semua pengujian Postman, baik mandatory maupun opsional (jika ada), bebas dari error.
+
+* Memenuhi ketentuan sebelumnya.
+* Kredensial database disimpan di **environment variables** (`DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`).
+* Menggunakan Django ORM lanjutan: **limit, ordering, filter**.
+* Menggunakan UUID sebagai primary key.
+* Semua pengujian Postman (mandatory & optional) lolos tanpa error.
 
 ---
 
 ## Kriteria 2: Menerapkan Autentikasi dan Otorisasi pada RESTful API Django
 
 ### Reject (0 pts)
-- Tidak ada implementasi autentikasi dan otorisasi dalam RESTful API.
-- Menggunakan metode autentikasi yang tidak sesuai, seperti sessions atau cookies.
-- Tidak ada implementasi RBAC (Role-based access control).
-- Terdapat error dalam pengujian mandatory Postman.
+
+* Tidak ada autentikasi/otorisasi.
+* Menggunakan session/cookies (salah metode).
+* Tidak ada RBAC.
+* Terdapat error dalam pengujian mandatory Postman.
 
 ### Basic (2 pts)
-- Terdapat implementasi autentikasi menggunakan **JWT**.
-- Terdapat implementasi RBAC dengan role dasar pengguna: **user**, **admin**, dan **superuser**.  
-  Rancangan otorisasinya sebagai berikut:
-  - **Superuser** → akses penuh ke semua fitur.
-  - **Admin** → dapat mengelola:
-    - Event (CRUD)
-    - Ticket (CRUD)
-    - Registration (CRUD)
-    - Payment (CRUD)
-  - **User** → dapat melakukan:
-    - Mendaftar akun dan login.
-    - Melihat daftar dan detail Event.
-    - Melihat daftar dan detail Ticket.
-    - Melakukan dan melihat detail Registrations.
-    - Melakukan dan melihat detail Payment.
-- Pengujian mandatory Postman tidak ada yang error.
+
+* Implementasi autentikasi JWT.
+* RBAC role dasar: **user**, **admin**, **superuser**.
+
+  * **Superuser**: akses penuh.
+  * **Admin**: CRUD Event, Ticket, Registration, Payment.
+  * **User**: daftar/login, lihat Event & Ticket, CRUD Registration & Payment (hanya miliknya).
+* Semua pengujian mandatory Postman tidak error.
 
 ### Skilled (3 pts)
-- Memenuhi ketentuan nilai sebelumnya.
-- Access Token yang dihasilkan JWT memiliki masa berlaku hingga **3 jam** setelah diterbitkan.
-- Mengonfigurasi autentikasi JWT sebagai default di `settings.py`.
+
+* Memenuhi ketentuan sebelumnya.
+* JWT Access Token berlaku **3 jam**.
+* JWT diatur sebagai default authentication di `settings.py`.
 
 ### Advanced (4 pts)
-- Memenuhi ketentuan nilai sebelumnya.
-- Membuat **custom model User**.
-- Implementasi RBAC mencakup role tambahan seperti **organizer**.
-  - **Organizer** dapat mengelola entitas Event miliknya (mengubah dan menghapus data).
-- Terdapat implementasi **custom permission** di views.
-- Semua pengujian Postman, baik mandatory maupun opsional (jika ada), bebas dari error.
 
+* Memenuhi ketentuan sebelumnya.
+* Membuat **custom User model**.
+* RBAC mencakup role tambahan **organizer**:
+
+  * Organizer hanya bisa kelola event miliknya.
+* Ada **custom permission** di views.
+* Semua pengujian Postman (mandatory & optional) lolos tanpa error.
+
+---
+
+# Tips Menjalankan Project
+
+1. **Run server**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+2. **Buat superuser**
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+3. **Testing API**
+
+   * Import file Postman dari folder `postman/`.
+   * Gunakan environment `[788] DicoEvent.postman_environment.json`.
+   * Jalankan semua test (mandatory & optional).
+
+4. **ERD**
+
+   * Simpan file ERD di root project dengan nama `ERD-DicoEvent-versi-1.png`.
+
+---
+
+# Tips Maintenance & Truncate
+
+Kadang perlu reset data agar tidak bentrok saat testing ulang. Pilihan:
+
+### Truncate Semua Data
+
+```bash
+python manage.py flush
+```
+
+* Menghapus semua data termasuk superuser.
+* Migrasi tetap ada.
+
+### Hapus Semua Data Kecuali Superuser
+
+Masuk Django shell:
+
+```bash
+python manage.py shell
+```
+
+Lalu jalankan:
+
+```python
+from users.models import User
+from events.models import Event, Ticket, Registration, Payment
+
+# hapus semua user kecuali superuser
+User.objects.exclude(is_superuser=True).delete()
+
+# hapus semua data event dkk
+Event.objects.all().delete()
+Ticket.objects.all().delete()
+Registration.objects.all().delete()
+Payment.objects.all().delete()
+```
+
+### Drop Database (reset total)
+
+Jika migrasi rusak:
+
+```sql
+DROP DATABASE dico_event;
+CREATE DATABASE dico_event;
+GRANT ALL PRIVILEGES ON DATABASE dico_event TO developer;
+ALTER DATABASE dico_event OWNER TO developer;
+```
+
+Lalu migrate ulang:
+
+```bash
+python manage.py migrate
+```
+
+---
 
 # Pengujian
-- Terletak pada folder postman
+
+* Koleksi Postman tersedia di folder `postman/`.
+* Gunakan environment `[788] DicoEvent.postman_environment.json`.
+* Semua test **mandatory & optional** harus **PASS** untuk mendapat nilai Advanced.
+
+---
+
+"""
