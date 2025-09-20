@@ -1,4 +1,9 @@
-'''
+# Proyek Pertama: Dico Event 1
+## Penilaian Proyek
+Proyek ini berhasil mendapatkan bintang 5/5 pada submission dicoding course Belajar Fundamental Back-End Dengan Python.
+
+![Penilaian Proyek](README/penilaian_proyek.png)
+
 
 # DicoEvent
 
@@ -223,5 +228,3 @@ python manage.py migrate
 * Semua test **mandatory & optional** harus **PASS** untuk mendapat nilai Advanced.
 
 ---
-
-"""
