@@ -7,6 +7,8 @@ name = "pypi"
 django = "==4.2"
 psycopg2 = "*"
 dotenv = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
